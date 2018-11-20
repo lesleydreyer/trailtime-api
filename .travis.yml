@@ -1,0 +1,11 @@
+language: node_js
+node_js: node
+services:
+- mongodb
+deploy:
+  provider: heroku
+  api_key: 
+    secure: V+tja/xZnhpsYAI1ELnM9g+6tkHrtTvtUfjAzekelUXQOEHxaKKSRQP9dDnAsn1VLrwjBff84l+YrJFO9QpMp9sQl4RXncNyuo5GHwpb6CoWdylbAide5DjS56Qv2Zgg0sXWpsdfIjlrpwYckeQg5opUAaM79JDpEe9ISGbMIlmZnA9Z5UhLJKMh2xdannXO8Mar0ugttfV6yGpIOIz0c0IQ7rEg0i8qBBZGNQ8wAUCNDYh8DVvC0LC4tZemNIiRaFZZtZld1oMAGrPwJ8nZB9WgCD0+wjD88RE8bSBgS5fCImd85GADyvjIG7EkFiJIH80JQ+KGY65tC2tbD6C+vO77kmjN6oH5ivYxbnV5QhwwscZIE0wcjGx8Sf62q50oBw1y7gL/S4qm/7PwZ0A2+OosVge7ucIr8yiaKpHQFY/8KS0CSj/fSEG1x3LsyAtl/FgzyXW6Fus6mxCSZo23p1XN1VWHjdNWbPr2fbmY6V5A9en1331N3mD0BIaUJrB1vL+5AE2ES5hnB/yAPbhtywJN0FLtscITClAsRsBbSDJI7SB9/nJxeNWJQZrjeAtcxFqJEZJpVt6AQ8UGN9i8m+ds7M7tO2MHxv4B7b/sLFw3jWk5GUbSct2fpM42hbFvwNHOIKP89pnrRI4luP691zSp9+RR7owd0eBi4n1jA04=
+  app: trailtime-api
+  on:
+    repo: lesleydreyer/trailtime-api
