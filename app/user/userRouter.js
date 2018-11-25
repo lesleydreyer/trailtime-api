@@ -8,10 +8,9 @@ const userRouter = express.Router();
 
 userRouter.post('/', (request, response) => {
     const newUser = {
-        name: request.body.name,
-        email: request.body.email,
         username: request.body.username,
-        password: request.body.password
+        password: request.body.password,
+        email: request.body.email
     };
 
     const validation = Joi.validate(newUser, UserJoiSchema);
