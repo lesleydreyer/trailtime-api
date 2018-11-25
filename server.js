@@ -14,14 +14,9 @@ console.log('DATABASE_URL', DATABASE_URL);
 mongoose.set('useCreateIndex', true);
 const bodyParser = require('body-parser');
 const { userRouter } = require('./app/user/index');
-const { trailRouter } = require('./app/trails/trailRouter');
+const { trailRouter } = require('./app/trails/index');
+const { imageRouter } = require('./app/cloudinary/index');
 let server;
-
-cloudinary.config({
-    cloud_name: 'dskazcbzu',//process.env.CLOUD_NAME,
-    api_key: '286579632666271',//process.env.API_KEY,
-    api_secret: '74_KJt1He0Y06Ojw6vC-0_HooUc'//process.env.API_SECRET
-})
 
 app.use(
     cors({
@@ -29,37 +24,9 @@ app.use(
     })
 );
 
-app.use(formData.parse());
 app.use(express.json());
 
-//app.listen(process.env.PORT || 8080, () => console.log('👍'))
 
-app.post('/image-upload', (req, res) => {
-    /*
-        const values = Object.values(req.files)
-        const promises = values.map(image => cloudinary.uploader.upload(image.path))
-    
-        Promise
-            .all(promises)
-            .then(results => res.json(results))*/
-});
-
-
-//app.get('/api/*', (req, res) => {
-//    return res.json({ ok: true });
-//});
-
-/*app.use('/api/trails', (req, res) => {
-    return res.status(404).json({
-        message: 'trails'
-    });
-});
-
-app.use('/api/users', (req, res) => {
-    return res.status(404).json({
-        message: 'users'
-    });
-});*/
 
 app.use('*', (req, res) => {
     return res.status(404).json({
@@ -69,8 +36,7 @@ app.use('*', (req, res) => {
 
 app.use('/api/user', userRouter);
 app.use('/api/trail', trailRouter);
-
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+app.use('/api/:trailid/images', imageRouter);
 
 
 function runServer(testEnv) {
@@ -116,11 +82,10 @@ function closeServer() {
     });
 }
 
-//if (require.main === module) {
-//    runServer().catch(err => console.error(err));
-//}
+if (require.main === module) {
+    runServer().catch(err => console.error(err));
+}
 
-//module.exports = { app };
 //https://stormy-falls-76813.herokuapp.com/ is heroku
 
 module.exports = {
