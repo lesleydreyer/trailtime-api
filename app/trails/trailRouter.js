@@ -1,14 +1,13 @@
 const express = require('express');
 const Joi = require('joi');
 const trailRouter = express.Router();
-//const passport = require('passport');
 const HTTP_STATUS_CODES = require('../httpStatusCodes');
-//const { jwtPassportMiddleware } = require('../auth/auth.strategy');
 const { Trail, TrailJoiSchema } = require('./trailModel.js');
+const { jwtAuth } = require('../auth/authStrategies');
 
 trailRouter.use(express.json());
 
-trailRouter.post('/', (request, response) => {//('/', jwtPassportMiddleware, (request, response)
+trailRouter.post('/', jwtAuth, (request, response) => {
     const newTrail = {
         // user: request.user.id,
         trailName: request.body.trailName,
@@ -30,7 +29,7 @@ trailRouter.post('/', (request, response) => {//('/', jwtPassportMiddleware, (re
         });
 });
 
-trailRouter.get('/', (request, response) => {//jwtPassportMiddleware, (request,
+trailRouter.get('/', jwtAuth, (request, response) => {
     Trail.find()//{ user: request.user.id })
         .populate('user')
         .then(trails => {
@@ -55,7 +54,7 @@ trailRouter.get('/:trailid', (request, response) => {
         });
 });
 
-trailRouter.put('/:trailid', (request, response) => {//jwtPassportMiddleware, (requ
+trailRouter.put('/:trailid', jwtAuth, (request, response) => {
     const trailUpdate = {
         trailName: request.body.trailName,
         trailRating: request.body.trailRating,
@@ -75,7 +74,7 @@ trailRouter.put('/:trailid', (request, response) => {//jwtPassportMiddleware, (r
         });
 });
 
-trailRouter.delete('/:trailid', (request, response) => {// jwtPassportMiddleware,
+trailRouter.delete('/:trailid', jwtAuth, (request, response) => {
     Trail.findByIdAndDelete(request.params.trailid)
         .then(() => {
             return response.status(HTTP_STATUS_CODES.NO_CONTENT).end();
