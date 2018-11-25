@@ -15,6 +15,7 @@ const bodyParser = require('body-parser');
 const { userRouter } = require('./app/user/index');
 const { trailRouter } = require('./app/trails/index');
 const { imageRouter } = require('./app/cloudinary/index');
+const { commentRouter } = require('./app/comments/index');
 const { authRouter, localStrategy, jwtStrategy } = require('./app/auth/index');
 
 let server;
@@ -33,6 +34,7 @@ app.use('*', (req, res) => {
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/trail', trailRouter);
+app.use('api/:trailid/comments', commentRouter);
 app.use('/api/:trailid/images', imageRouter);
 
 const jwtAuth = passport.authenticate('jwt', {

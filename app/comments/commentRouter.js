@@ -1,26 +1,23 @@
 const express = require('express');
 const Joi = require('joi');
-const trailRouter = express.Router();
+const commentRouter = express.Router();
 const HTTP_STATUS_CODES = require('../httpStatusCodes');
-const { Trail, TrailJoiSchema } = require('./trailModel.js');
+const { Comment, CommentJoiSchema } = require('./commentModel.js');
 const { jwtAuth } = require('../auth/authStrategies');
 
-trailRouter.use(express.json());
+commentRouter.use(express.json());
 
-trailRouter.post('/', jwtAuth, (request, response) => {
-    const newTrail = {
+commentRouter.post('/', jwtAuth, (request, response) => {
+    const newComment = {
         // user: request.user.id,
-        trailName: request.body.trailName,
-        trailRating: request.body.trailRating,
-        trailLocation: request.body.trailLocation,
-        trailDescription: request.body.trailDescription
+        commentText: request.body.commentText
     };
 
-    const validation = Joi.validate(newTrail, TrailJoiSchema);
+    const validation = Joi.validate(newComment, CommentJoiSchema);
     if (validation.error) {
         return response.status(HTTP_STATUS_CODES.BAD_REQUEST).json({ error: validation.error });
     }
-    Trail.create(newTrail)
+    Comment.create(newComment)
         .then(createdUser => {
             return response.status(HTTP_STATUS_CODES.CREATED).json(createdUser.serialize());
         })
@@ -29,12 +26,12 @@ trailRouter.post('/', jwtAuth, (request, response) => {
         });
 });
 
-trailRouter.get('/', jwtAuth, (request, response) => {
-    Trail.find()//{ user: request.user.id })
+commentRouter.get('/', jwtAuth, (request, response) => {
+    Comment.find()//{ user: request.user.id })
         .populate('user')
-        .then(trails => {
+        .then(comments => {
             return response.status(HTTP_STATUS_CODES.OK).json(
-                trails.map(trail => trail.serialize())
+                comments.map(comment => comment.serialize())
             );
         })
         .catch(error => {
@@ -43,30 +40,26 @@ trailRouter.get('/', jwtAuth, (request, response) => {
 });
 
 
-trailRouter.get('/:trailid', (request, response) => {
-    Trail.findById(request.params.trailid)
+commentRouter.get('/:commentid', (request, response) => {
+    Comment.findById(request.params.trailid)
         .populate('user')
-        .populate('comments')
-        .then(trail => {
-            return response.status(HTTP_STATUS_CODES.OK).json(trail.serialize());
+        .then(comment => {
+            return response.status(HTTP_STATUS_CODES.OK).json(comment.serialize());
         })
         .catch(error => {
             return response.status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR).json(error);
         });
 });
 
-trailRouter.put('/:trailid', jwtAuth, (request, response) => {
-    const trailUpdate = {
-        trailName: request.body.trailName,
-        trailRating: request.body.trailRating,
-        trailLocation: request.body.trailLocation,
-        trailDescription: request.body.trailDescription
+commentRouter.put('/:commentid', jwtAuth, (request, response) => {
+    const commentUpdate = {
+        commentText: request.body.commentText
     };
-    const validation = Joi.validate(trailUpdate, TrailJoiSchema);
+    const validation = Joi.validate(commentUpdate, CommentJoiSchema);
     if (validation.error) {
         return response.status(HTTP_STATUS_CODES.BAD_REQUEST).json({ error: validation.error });
     }
-    Trail.findByIdAndUpdate(request.params.trailid, trailUpdate)
+    Comment.findByIdAndUpdate(request.params.commentid, commentUpdate)
         .then(() => {
             return response.status(HTTP_STATUS_CODES.NO_CONTENT).end();
         })
@@ -75,8 +68,8 @@ trailRouter.put('/:trailid', jwtAuth, (request, response) => {
         });
 });
 
-trailRouter.delete('/:trailid', jwtAuth, (request, response) => {
-    Trail.findByIdAndDelete(request.params.trailid)
+commentRouter.delete('/:commentid', jwtAuth, (request, response) => {
+    Comment.findByIdAndDelete(request.params.trailid)
         .then(() => {
             return response.status(HTTP_STATUS_CODES.NO_CONTENT).end();
         })
@@ -85,4 +78,4 @@ trailRouter.delete('/:trailid', jwtAuth, (request, response) => {
         });
 });
 
-module.exports = { trailRouter };
+module.exports = { commentRouter };
