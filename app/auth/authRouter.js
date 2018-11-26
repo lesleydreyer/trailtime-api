@@ -1,19 +1,19 @@
 'use strict';
 
 const express = require('express');
-const passport = require('passport');
-const bodyParser = require('body-parser');
+//const passport = require('passport');
+//const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const config = require('../../config');
-
+const { localAuth, jwtAuth } = require('./authStrategies');
 const authRouter = express.Router();
-authRouter.use(bodyParser.json());
-const localAuth = passport.authenticate('local', {
-    session: false,
-});
-const jwtAuth = passport.authenticate('jwt', {
-    session: false,
-});
+//authRouter.use(bodyParser.json());
+//const localAuth = passport.authenticate('local', {
+//    session: false,
+//});
+//const jwtAuth = passport.authenticate('jwt', {
+//    session: false,
+//});
 
 
 const createAuthToken = function (user) {

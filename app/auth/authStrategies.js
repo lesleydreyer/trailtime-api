@@ -12,7 +12,9 @@ const localStrategy = new LocalStrategy((username, password, callback) => {
     User.findOne({ username: username })
         .then(_user => {
             user = _user;
+            console.log("here", user);
             if (!user) {
+                console.log("user not found");
                 // Return a rejected promise so we break out of the chain of .thens.
                 // Any errors like this will be handled in the catch block.
                 return Promise.reject({
@@ -23,6 +25,7 @@ const localStrategy = new LocalStrategy((username, password, callback) => {
             return user.validatePassword(password);
         }).then(isValid => {
             if (!isValid) {
+                console.log("not valid");
                 // Step 3A: If password doesn't match the stored password hash, reject promise with an error.
                 return Promise.reject({
                     reason: 'LoginError',
@@ -32,6 +35,7 @@ const localStrategy = new LocalStrategy((username, password, callback) => {
             return callback(null, user);
         })
         .catch(err => {
+            console.log("catch block");
             if (err.reason === 'LoginError') {
                 return callback(null, false, err);
             }

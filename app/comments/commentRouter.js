@@ -1,7 +1,7 @@
 const express = require('express');
 const Joi = require('joi');
 const commentRouter = express.Router();
-const HTTP_STATUS_CODES = require('../httpStatusCodes');
+const HTTP_STATUS_CODES = require('../httpStatusCodes').HTTP_STATUS_CODES;
 const { Comment, CommentJoiSchema } = require('./commentModel.js');
 const { jwtAuth } = require('../auth/authStrategies');
 

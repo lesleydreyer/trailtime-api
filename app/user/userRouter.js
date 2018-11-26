@@ -1,7 +1,7 @@
 const express = require('express');
 const Joi = require('joi');
 
-const HTTP_STATUS_CODES = require('../httpStatusCodes');
+const HTTP_STATUS_CODES = require('../httpStatusCodes').HTTP_STATUS_CODES;
 const { User, UserJoiSchema } = require('./userModel');
 
 const userRouter = express.Router();
@@ -26,7 +26,7 @@ userRouter.post('/', (request, response) => {
         if (user) {
             return response.status(HTTP_STATUS_CODES.BAD_REQUEST).json({ error: 'Database Error: A user with that username and/or email already exists.' });
         }
-        return User;//.hashPassword(newUser.password);
+        return User.hashPassword(newUser.password);
     }).then(passwordHash => {
         newUser.password = passwordHash;
         User.create(newUser)

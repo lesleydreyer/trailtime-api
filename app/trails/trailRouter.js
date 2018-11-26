@@ -1,7 +1,7 @@
 const express = require('express');
 const Joi = require('joi');
 const trailRouter = express.Router();
-const HTTP_STATUS_CODES = require('../httpStatusCodes');
+const HTTP_STATUS_CODES = require('../httpStatusCodes').HTTP_STATUS_CODES;
 const { Trail, TrailJoiSchema } = require('./trailModel.js');
 const { jwtAuth } = require('../auth/authStrategies');
 
