@@ -20,13 +20,13 @@ const trailSchema = new mongoose.Schema({
     trailRating: { type: String },
     trailLocation: { type: String, required: true },
     trailDescription: { type: String },
-    images: [],
+    images: [String],
     //comments: [commentSchema],
     comments: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Comment"
+        ref: "Comment"//own schema
     }],
-    events: [eventSchema]
+    events: [eventSchema]//own schema
 });
 
 
@@ -34,7 +34,7 @@ const trailSchema = new mongoose.Schema({
 trailSchema.methods.serialize = function () {
     let user;
     // serialize user if populated to avoid returning info like hashed password
-    if (typeof this.user.serialize === 'function') {
+    if (typeof this.user === 'function') {
         user = this.user.serialize();
     } else {
         user = this.user;
@@ -56,7 +56,13 @@ trailSchema.methods.serialize = function () {
 
 const TrailJoiSchema = Joi.object().keys({
     user: Joi.string().optional(),
-    trailName: Joi.string().min(1).required()
+    trailName: Joi.string().min(1).required(),
+    trailRating: Joi.string().optional(),
+    trailLocation: Joi.string().optional(),
+    trailDescription: Joi.string().optional(),
+    images: Joi.optional(),
+    comments: Joi.optional(),
+    events: Joi.optional()
 });
 
 

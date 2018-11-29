@@ -9,7 +9,7 @@ trailRouter.use(express.json());
 
 trailRouter.post('/', jwtAuth, (request, response) => {
     const newTrail = {
-        // user: request.user.id,
+        user: request.user.id,
         trailName: request.body.trailName,
         trailRating: request.body.trailRating,
         trailLocation: request.body.trailLocation,
@@ -31,7 +31,7 @@ trailRouter.post('/', jwtAuth, (request, response) => {
 
 trailRouter.get('/', jwtAuth, (request, response) => {
     Trail.find()//{ user: request.user.id })
-        .populate('user')
+        .populate('user')//the key
         .then(trails => {
             return response.status(HTTP_STATUS_CODES.OK).json(
                 trails.map(trail => trail.serialize())
