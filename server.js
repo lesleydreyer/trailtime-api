@@ -39,8 +39,8 @@ app.use(function (req, res, next) {
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/trail', trailRouter);
-app.use('api/:trailid/comments', commentRouter);
-app.use('/api/:trailid/images', imageRouter);
+app.use('api/comments/:trailid', commentRouter);
+app.use('api/images/:trailid', imageRouter);
 
 const jwtAuth = passport.authenticate('jwt', {
     session: false

@@ -46,7 +46,7 @@ trailRouter.get('/', jwtAuth, (request, response) => {
 trailRouter.get('/:trailid', (request, response) => {
     Trail.findById(request.params.trailid)
         .populate('user')
-        .populate('comments')
+        //.populate('comments')
         .then(trail => {
             return response.status(HTTP_STATUS_CODES.OK).json(trail.serialize());
         })

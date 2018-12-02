@@ -34,7 +34,7 @@ const trailSchema = new mongoose.Schema({
 trailSchema.methods.serialize = function () {
     let user;
     // serialize user if populated to avoid returning info like hashed password
-    if (typeof this.user === 'function') {
+    if (typeof this.user === 'function') {//if (typeof this.user.serialize === 'function') {
         user = this.user.serialize();
     } else {
         user = this.user;
