@@ -1,31 +1,29 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
+const Comment = require('../comments/commentModel')
 
 
-var commentSchema = new mongoose.Schema({
-    type: String,
-    author: String
-});
 var eventSchema = new mongoose.Schema({
     date: { type: Date, default: Date.now },
     attendees: [String]
 });
 
+
 const trailSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'user'
     },//creator
     trailName: { type: String, required: true },
     trailRating: { type: String },
     trailLocation: { type: String, required: true },
     trailDescription: { type: String },
     images: [String],
-    //comments: [commentSchema],
-    comments: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Comment"//own schema
-    }],
+    //comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'comment' }],
+    //comments: [{
+    //    type: mongoose.Schema.Types.ObjectId,
+    //    ref: "Comment"//own schema
+    //}],
     events: [eventSchema]//own schema
 });
 
@@ -48,7 +46,7 @@ trailSchema.methods.serialize = function () {
         trailLocation: this.trailLocation,
         trailDescription: this.trailDescription,
         images: this.images,
-        comments: this.comments,
+        //comments: this.comments,
         events: this.events
     };
 };

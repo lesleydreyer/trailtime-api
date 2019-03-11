@@ -22,6 +22,7 @@ const { trailRouter } = require('./app/trails/index');
 const { imageRouter } = require('./app/cloudinary/index');
 const { commentRouter } = require('./app/comments/index');
 const { authRouter, localStrategy, jwtStrategy } = require('./app/auth');
+const { } = require('./app/imageUploads/index');
 
 console.log('DATABASE_URL', DATABASE_URL);
 

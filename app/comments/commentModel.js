@@ -3,13 +3,26 @@ const Joi = require('joi');
 
 
 var commentSchema = new mongoose.Schema({
-    commentText: String,
+    commentText: {
+        type: String,
+        required: true
+    },
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'user'
     },
+    comments: [this],
+    trail: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'trail'
+    },
+    createdAt: { type: Date, default: Date.now }
 });
 
+commentSchema.pre('findById', function (next) {
+    this.populate('trail');
+    next();
+})
 
 commentSchema.methods.serialize = function () {
     let user;
@@ -19,11 +32,22 @@ commentSchema.methods.serialize = function () {
     } else {
         user = this.user;
     }
+    let trail;
+    if (typeof this.trail.serialize === 'function') {
+        trail = this.trail.serialize();
+    } else {
+        trail = this.trail;
+    }
+
+    console.log(this.trail)
 
     return {
         id: this._id,
-        user: user,
         commentText: this.commentText,
+        user: user,
+        comments: this.comments,
+        trail: this.trailId,
+        createdAt: this.createdAt
     };
 };
 

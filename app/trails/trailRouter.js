@@ -31,8 +31,10 @@ trailRouter.post('/', jwtAuth, (request, response) => {
 
 trailRouter.get('/', jwtAuth, (request, response) => {
     Trail.find()//{ user: request.user.id })
-        .populate('user')//the key
+        .populate('user', 'comments')//the key
+        //.populate('comments')
         .then(trails => {
+            console.log('TRIALS', trails)
             return response.status(HTTP_STATUS_CODES.OK).json(
                 trails.map(trail => trail.serialize())
             );
@@ -45,7 +47,7 @@ trailRouter.get('/', jwtAuth, (request, response) => {
 
 trailRouter.get('/:trailid', (request, response) => {
     Trail.findById(request.params.trailid)
-        .populate('user')
+        .populate('user', 'comments')
         //.populate('comments')
         .then(trail => {
             return response.status(HTTP_STATUS_CODES.OK).json(trail.serialize());

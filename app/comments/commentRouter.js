@@ -8,9 +8,11 @@ const { jwtAuth } = require('../auth/authStrategies');
 commentRouter.use(express.json());
 
 commentRouter.post('/', jwtAuth, (request, response) => {
+    console.log('REQUEST POST', request.body)
     const newComment = {
-        // user: request.user.id,
-        commentText: request.body.commentText
+        user: request.user.id,
+        commentText: request.body.commentText,
+        //trail: request.trail.id
     };
 
     const validation = Joi.validate(newComment, CommentJoiSchema);
@@ -28,7 +30,8 @@ commentRouter.post('/', jwtAuth, (request, response) => {
 
 commentRouter.get('/', jwtAuth, (request, response) => {
     Comment.find()//{ user: request.user.id })
-        .populate('user')
+        .populate('user', 'trail')
+        //.populate('trail')
         .then(comments => {
             return response.status(HTTP_STATUS_CODES.OK).json(
                 comments.map(comment => comment.serialize())
@@ -42,7 +45,8 @@ commentRouter.get('/', jwtAuth, (request, response) => {
 
 commentRouter.get('/:commentid', (request, response) => {
     Comment.findById(request.params.trailid)
-        .populate('user')
+        .populate('user', 'trail')
+        //        .populate('trail')
         .then(comment => {
             return response.status(HTTP_STATUS_CODES.OK).json(comment.serialize());
         })
