@@ -13,7 +13,8 @@ trailRouter.post('/', jwtAuth, (request, response) => {
         trailName: request.body.trailName,
         trailRating: request.body.trailRating,
         trailLocation: request.body.trailLocation,
-        trailDescription: request.body.trailDescription
+        trailDescription: request.body.trailDescription,
+        trailImage: request.body.trailImage
     };
 
     const validation = Joi.validate(newTrail, TrailJoiSchema);
@@ -31,10 +32,9 @@ trailRouter.post('/', jwtAuth, (request, response) => {
 
 trailRouter.get('/', jwtAuth, (request, response) => {
     Trail.find()//{ user: request.user.id })
-        .populate('user', 'comments')//the key
-        //.populate('comments')
+        .populate('user')//the key
+        .sort({ trailName: 1 })
         .then(trails => {
-            console.log('TRIALS', trails)
             return response.status(HTTP_STATUS_CODES.OK).json(
                 trails.map(trail => trail.serialize())
             );
@@ -43,12 +43,31 @@ trailRouter.get('/', jwtAuth, (request, response) => {
             return response.status(500).json(error);
         });
 });
-
+/*WAS TRYING TO DO A QUERY
+trailRouter.get('/search', jwtAuth, (request, response) => {
+    Trail.find({ trailLocation: request.query.trailLocation })//{ user: request.user.id })
+        .populate('user')//the key
+        .sort({ trailName: 1 })
+        .then(trails => {
+            return response.status(HTTP_STATUS_CODES.OK).json(
+                //{ trailLocation: req.query.trailLocation }
+                trails.map(trail => trail.serialize())
+            );
+        })
+        .catch(error => {
+            return response.status(500).json(error);
+        });
+});
+trailRouter.get('/:aaa/', function (req, res) {
+    res.json({
+        trailLocation: req.query.trailLocation,
+    });
+});
+*/
 
 trailRouter.get('/:trailid', (request, response) => {
     Trail.findById(request.params.trailid)
-        .populate('user', 'comments')
-        //.populate('comments')
+        .populate('user')
         .then(trail => {
             return response.status(HTTP_STATUS_CODES.OK).json(trail.serialize());
         })
@@ -62,7 +81,8 @@ trailRouter.put('/:trailid', jwtAuth, (request, response) => {
         trailName: request.body.trailName,
         trailRating: request.body.trailRating,
         trailLocation: request.body.trailLocation,
-        trailDescription: request.body.trailDescription
+        trailDescription: request.body.trailDescription,
+        trailImage: request.body.trailImage
     };
     const validation = Joi.validate(trailUpdate, TrailJoiSchema);
     if (validation.error) {
