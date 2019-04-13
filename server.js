@@ -106,8 +106,6 @@ if (require.main === module) {
     runServer().catch(err => console.error(err));
 }
 
-//https://stormy-falls-76813.herokuapp.com/ is heroku
-
 module.exports = {
     app,
     runServer,
