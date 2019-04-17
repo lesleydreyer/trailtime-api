@@ -26,12 +26,12 @@ let server;
 passport.use(localStrategy); // Configure Passport to use our localStrategy when receiving Username + Password combinations
 passport.use(jwtStrategy); // Configure Passport to use our jwtStrategy when receving JSON Web Tokens
 
-//app.use(cors({ origin: CLIENT_ORIGIN }));
-//console.log('CLIENT_ORIGN', CLIENT_ORIGIN);
+app.use(cors({ origin: CLIENT_ORIGIN }));
+console.log('CLIENT_ORIGN', CLIENT_ORIGIN);
 app.use(morgan('common'));
 app.use(express.json()); // You can also use: // app.use(bodyParser.json());
 
-
+/*
 app.use(function (req, res, next) {
     //res.header('Access-Control-Allow-Origin', '*');//don't use this one cause allows anyone to use it
     res.header('Access-Control-Allow-Origin', CLIENT_ORIGIN);
@@ -41,7 +41,7 @@ app.use(function (req, res, next) {
         return res.send(204);
     }
     next();
-});
+});*/
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/trail', trailRouter);
