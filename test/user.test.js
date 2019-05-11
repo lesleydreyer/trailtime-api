@@ -11,7 +11,7 @@ const expect = chai.expect;
 chai.use(chaiHttp);
 
 
-describe('/api/users', () => {
+describe('/api/user', () => {
     let testUser;
 
     function createFakeUser() {
@@ -51,7 +51,7 @@ describe('/api/users', () => {
 
 
     it('Should return all users', () => chai.request(app)
-        .get('/api/users')
+        .get('/api/user')
         .then((res) => {
             expect(res).to.have.status(200);
             expect(res).to.be.json;
@@ -65,7 +65,7 @@ describe('/api/users', () => {
         let foundUser;
         // debugger;
         return chai.request(app)
-            .get('/api/users')
+            .get('/api/user')
             .then((res) => {
                 console.log(res.body);
                 expect(res).to.have.status(200);
@@ -73,7 +73,7 @@ describe('/api/users', () => {
                 expect(res.body).to.be.a('array');
                 expect(res.body).to.have.lengthOf.at.least(1);
                 foundUser = res.body[0];
-                return chai.request(app).get(`/api/users/${foundUser.id}`);
+                return chai.request(app).get(`/api/user/${foundUser.id}`);
             })
             .then((res) => {
                 expect(res).to.have.status(200);
@@ -86,7 +86,7 @@ describe('/api/users', () => {
     it('Should create a new user', () => {
         const newUser = createFakeUser();
         return chai.request(app)
-            .post('/api/users')
+            .post('/api/user')
             .send(newUser)
             .then((res) => {
                 expect(res).to.have.status(201);
