@@ -1,5 +1,3 @@
-/*
-
 const mongoose = require('mongoose');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -29,7 +27,27 @@ describe('Integration tests for: /api/trail', () => {
     let testUser;
     let authToken;
 
-    before(() => runServer());
+
+    function createFakerUser() {
+        return {
+            name: `${faker.name.firstName()} ${faker.name.lastName()}`,
+            username: `${faker.lorem.word()}${faker.random.number(100)}`,
+            password: faker.internet.password(),
+            email: faker.internet.email(),
+        };
+    }
+
+    function createFakerTrail() {
+        return {
+            trailName: faker.lorem.word(),
+            trailRating: faker.lorem.word(),
+            trailLocation: faker.address.streetAddress(),
+            trailDescription: faker.lorem.sentence(),
+            trailImage: faker.image.imageUrl(),
+        };
+    }
+
+    before(() => runServer(true));
 
     beforeEach(() => {
         testUser = createFakerUser();
@@ -69,7 +87,7 @@ describe('Integration tests for: /api/trail', () => {
                     newTrail.user = createdUser.id;
                     seedData.push(newTrail);
                 }
-                return TrailEvent.insertMany(seedData)
+                return Trail.insertMany(seedData)
                     .catch((err) => {
                         console.error(err);
                         throw new Error(err);
@@ -99,7 +117,6 @@ describe('Integration tests for: /api/trail', () => {
             .get('/api/trail')
             .set('Authorization', `Bearer ${authToken}`)
             .then((res) => {
-                debugger;
                 expect(res).to.have.status(200);
                 expect(res).to.be.json;
                 expect(res.body).to.be.a('array');
@@ -111,7 +128,7 @@ describe('Integration tests for: /api/trail', () => {
 
     it('Should return a specific trail', () => {
         let foundTrail;
-        return Trails.find()
+        return Trail.find()
             .then((trails) => {
                 expect(trails).to.be.a('array');
                 expect(trails).to.have.lengthOf.at.least(1);
@@ -136,4 +153,62 @@ describe('Integration tests for: /api/trail', () => {
                 });
             });
     });
-});*/
+
+    it('Should update a specific trail', () => {
+        let trailToUpdate;
+        const newTrailData = createFakerTrail();
+        return Trail.find()
+            .then((trails) => {
+                expect(trails).to.be.a('array');
+                expect(trails).to.have.lengthOf.at.least(1);
+                trailToUpdate = trails[0];
+
+                return chai.request(app)
+                    .put(`/api/trail/${trailToUpdate.id}`)
+                    .set('Authorization', `Bearer ${authToken}`)
+                    .send(newTrailData);
+            })
+            .then((res) => {
+                expect(res).to.have.status(204);
+
+                return Trail.findById(trailToUpdate.id);
+            })
+            .then((trail) => {
+                expect(trail).to.be.a('object');
+                expect(trail).to.deep.include({
+                    id: trailToUpdate.id,
+                    trailName: newTrailData.trailName,
+                    trailRating: newTrailData.trailRating,
+                    trailLocation: newTrailData.trailLocation,
+                    trailDescription: newTrailData.trailDescription,
+                    trailImage: newTrailData.trailImage,
+                });
+            });
+    });
+
+
+    it('Should update a specific trail', () => {
+        let trailToDelete;
+        const newTrailData = createFakerTrail();
+        return Trail.find()
+            .then((trails) => {
+                expect(trails).to.be.a('array');
+                expect(trails).to.have.lengthOf.at.least(1);
+                trailToDelete = trails[0];
+
+                return chai.request(app)
+                    .delete(`/api/trail/${trailToDelete.id}`)
+                    .set('Authorization', `Bearer ${authToken}`)
+                    .send(newTrailData);
+            })
+            .then((res) => {
+                expect(res).to.have.status(204);
+
+                return Trail.findById(trailToDelete.id);
+            })
+            .then((trail) => {
+                expect(trail).to.not.exist;
+            });
+    });
+
+});

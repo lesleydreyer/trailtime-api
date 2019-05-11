@@ -12,6 +12,8 @@ const { User } = require('../app/user/userModel');
 const expect = chai.expect;
 chai.use(chaiHttp);
 
+//kill server before running since npm test starts its own server for testing
+
 describe('Integration tests for: /api/auth', () => {
     let testUser;
     let authToken;
@@ -106,8 +108,6 @@ describe('Integration tests for: /api/auth', () => {
                 });
 
                 expect(newJwtPayload.exp).to.be.at.least(firstJwtPayload.exp);
-
-                //done();
             });
     });
 
